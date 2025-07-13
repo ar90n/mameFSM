@@ -1,32 +1,82 @@
-# Prerequisites
-*.d
+.devcontainer
+claude.md
+index.html
 
-# Compiled Object files
-*.slo
-*.lo
+# Build directories
+build/
+cmake-build-*/
+out/
+
+# Compiled binaries
+*.exe
+*.out
+*.app
+simple
+hierarchical
+test_runner
+
+# Object files
 *.o
 *.obj
+*.ko
+*.elf
 
 # Precompiled Headers
 *.gch
 *.pch
 
-# Compiled Dynamic libraries
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
 *.so
+*.so.*
 *.dylib
 *.dll
 
-# Fortran module files
-*.mod
-*.smod
+# IDE directories
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
 
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile.cmake
+CTestTestfile.cmake
+Testing/
 
-# Executables
-*.exe
-*.out
-*.app
+# Dependency directories
+vendor/
+external/
+
+# Coverage
+*.gcov
+*.gcda
+*.gcno
+coverage/
+*.info
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# Backup files
+*.bak
+*.tmp
+*.temp
+
+# claude
+claude.md
+CLAUDE.md
+.claude
+
+# devocontainer
+.devcontainer

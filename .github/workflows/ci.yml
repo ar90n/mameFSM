@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+
+jobs:
+  build-and-test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        compiler: [gcc, clang]
+        include:
+          - os: ubuntu-latest
+            compiler: gcc
+            cc: gcc-13
+            cxx: g++-13
+          - os: ubuntu-latest
+            compiler: clang
+            cc: clang-16
+            cxx: clang++-16
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install dependencies (Ubuntu)
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        if [ "${{ matrix.compiler }}" = "gcc" ]; then
+          sudo apt-get install -y gcc-13 g++-13
+        else
+          wget https://apt.llvm.org/llvm.sh
+          chmod +x llvm.sh
+          sudo ./llvm.sh 16
+          sudo apt-get install -y clang-16 clang++-16
+        fi
+        sudo apt-get install -y clang-format
+
+    - name: Set compiler
+      run: |
+        echo "CC=${{ matrix.cc }}" >> $GITHUB_ENV
+        echo "CXX=${{ matrix.cxx }}" >> $GITHUB_ENV
+
+    - name: Check compiler version
+      run: |
+        ${{ matrix.cxx }} --version
+
+    - name: Check code formatting
+      run: |
+        make check-format
+
+    - name: Build samples
+      run: |
+        make samples
+
+    - name: Build tests
+      run: |
+        make tests
+
+    - name: Run tests
+      run: |
+        make test
+
+    - name: Test samples
+      run: |
+        echo "Testing simple sample..."
+        ./build/bin/simple
+        echo ""
+        echo "Testing hierarchical sample..."
+        ./build/bin/hierarchical
+

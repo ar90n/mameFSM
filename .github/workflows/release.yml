@@ -1,0 +1,70 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  header-only-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Create release package
+        run: |
+          # Create release directory
+          mkdir -p mameFSM-${{ github.event.release.tag_name }}
+          
+          # Copy header file
+          cp src/mameFSM.hpp mameFSM-${{ github.event.release.tag_name }}/
+          
+          # Copy documentation
+          cp README.md mameFSM-${{ github.event.release.tag_name }}/
+          cp LICENSE mameFSM-${{ github.event.release.tag_name }}/
+          
+          # Create examples directory
+          mkdir -p mameFSM-${{ github.event.release.tag_name }}/examples
+          cp samples/*.cpp mameFSM-${{ github.event.release.tag_name }}/examples/
+          
+          # Create archives
+          tar -czf mameFSM-${{ github.event.release.tag_name }}.tar.gz mameFSM-${{ github.event.release.tag_name }}
+          zip -r mameFSM-${{ github.event.release.tag_name }}.zip mameFSM-${{ github.event.release.tag_name }}
+      
+      - name: Upload Release Assets
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            mameFSM-${{ github.event.release.tag_name }}.tar.gz
+            mameFSM-${{ github.event.release.tag_name }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  
+  verify-release:
+    needs: header-only-package
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        compiler: [g++, clang++]
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Download release artifact
+        run: |
+          curl -L -o mameFSM.tar.gz \
+            https://github.com/${{ github.repository }}/releases/download/${{ github.event.release.tag_name }}/mameFSM-${{ github.event.release.tag_name }}.tar.gz
+          tar -xzf mameFSM.tar.gz
+      
+      - name: Test release package
+        run: |
+          cd mameFSM-${{ github.event.release.tag_name }}
+          
+          # Compile examples
+          for example in examples/*.cpp; do
+            echo "Compiling $example..."
+            ${{ matrix.compiler }} -std=c++23 -I. -o test_binary "$example"
+            rm test_binary
+          done
+          
+          echo "✅ All examples compiled successfully!"
