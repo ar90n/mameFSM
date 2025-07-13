@@ -19,8 +19,8 @@ jobs:
             cxx: g++-13
           - os: ubuntu-latest
             compiler: clang
-            cc: clang-16
-            cxx: clang++-16
+            cc: clang-18
+            cxx: clang++-18
 
     runs-on: ${{ matrix.os }}
 
@@ -36,8 +36,8 @@ jobs:
         else
           wget https://apt.llvm.org/llvm.sh
           chmod +x llvm.sh
-          sudo ./llvm.sh 16
-          sudo apt-get install -y clang-16 clang++-16
+          sudo ./llvm.sh 18
+          sudo apt-get install -y clang-18 clang++-18
         fi
         sudo apt-get install -y clang-format
 
