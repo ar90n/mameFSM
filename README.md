@@ -1,6 +1,6 @@
 # mameFSM
 
-[![CI](https://github.com/mamemilk/mameFSM/actions/workflows/ci.yml/badge.svg)](https://github.com/mamemilk/mameFSM/actions/workflows/ci.yml)
+[![CI](https://github.com/ar90n/mameFSM/actions/workflows/ci.yml/badge.svg)](https://github.com/ar90n/mameFSM/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![C++](https://img.shields.io/badge/C%2B%2B-23-blue.svg)](https://en.cppreference.com/w/cpp/23)
 [![Header Only](https://img.shields.io/badge/header--only-✓-brightgreen.svg)](src/mameFSM.hpp)
